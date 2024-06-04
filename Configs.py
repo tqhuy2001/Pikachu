@@ -44,5 +44,5 @@ PIECES = ["", "Assets\\pieces1.png",
 
 BUTTON = ["Assets\\btnchange.png",
 "Assets\\btnreplay.png",
-"Assets\\btnsoundoff.png",
-"Assets\\btnsoundon.png",]
+"Assets\\btnsoundon.png",
+"Assets\\btnsoundoff.png",]

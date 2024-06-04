@@ -14,7 +14,7 @@ class Piece(Object):
     border_color = "red"
     border = pygame.Rect(0, 0, 40, 50)
     piece = pygame.image
-    mouse = MouseEffect()
+    isSelected = False
 
     def __init__(self, path, parent_surface: pygame.Surface, row, col):
         super().__init__(path, parent_surface)
@@ -23,9 +23,12 @@ class Piece(Object):
         self.piece = pygame.image.load(self.path)
 
     def checkMouse(self):
+        mouse = MouseEffect()
         x_len = self.piece.get_width()
         y_len = self.piece.get_height()
-        mos_x, mos_y = self.mouse.getPosMouse()
+        mos_x = mouse.getPosMouse()[0]
+        mos_y = mouse.getPosMouse()[1]
+
         if mos_x > self.col * x_len + Cfs.FIRST_PIECE_POS_X and (mos_x < self.col * x_len + Cfs.FIRST_PIECE_POS_X + x_len):
             x_inside = True
         else:
@@ -36,10 +39,12 @@ class Piece(Object):
             y_inside = False
         if x_inside and y_inside:
             self.border_color = "green"
+            if mouse.getPressedMouse() != None:
+                self.border_color = "black"
+                self.isSelected = True
         else:
             self.border_color = "red"
-        if x_inside and y_inside and self.mouse.getPressedMouse() != None:
-            self.border_color = "black"
+
 
     def draw(self):
         self.checkMouse()

@@ -1,18 +1,16 @@
 import pygame
-import Configs as Cfs
 from GameSurface import *
-from Effects.MouseEffect import *
-from Objects.Object import *
 from Objects.Piece import *
 
 pygame.init()
+
 screen = pygame.display.set_mode((Cfs.WIDTH_SCREEN, Cfs.HEIGHT_SCREEN))
 clock = pygame.time.Clock()
 
 logo = pygame.image.load("Assets\\logo.png")
 background = pygame.image.load("Assets\\background.png")
-background = pygame.transform.scale(background,
-                                    (Cfs.WIDTH_SCREEN, Cfs.HEIGHT_SCREEN))
+background = pygame.transform.scale(background,(Cfs.WIDTH_SCREEN, Cfs.HEIGHT_SCREEN))
+
 game_surface = GameSurface(Cfs.WIDTH_SCREEN, Cfs.HEIGHT_SCREEN)
 
 mouse = MouseEffect()
@@ -22,7 +20,7 @@ pygame.display.set_icon(logo)
 
 running = True
 
-def startGame():
+def updateGame():
     game_surface.loadObjects()
     game_surface.drawMap()
     game_surface.drawGUI()
@@ -35,9 +33,9 @@ while running:
             running = False
 
     game_surface.blit(background, (0, 0))
-    startGame()
+    updateGame()
 
-    pygame.display.flip()
+    pygame.display.update()
     clock.tick(Cfs.FPS)
 
 pygame.quit()

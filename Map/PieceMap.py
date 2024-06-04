@@ -1,5 +1,4 @@
 import random
-import math
 
 class PieceMap:
 
@@ -10,7 +9,7 @@ class PieceMap:
         d = 0
         for row in range(11):
             tmp1 = []
-            tmp2 = ()
+
             for col in range(18):
                 tmp1.append(0)
                 if row >= 1 and row <= 9 and col >= 1 and col <= 16:
