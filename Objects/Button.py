@@ -1,12 +1,11 @@
 from Effects.MouseEffect import *
-from Objects.Object import *
 import Configs as Cfs
 
 import pygame
 
 pygame.init()
 
-class Button(Object):
+class Button():
 
     ori_pos_x = 0
     ori_pos_y = 0
@@ -15,9 +14,11 @@ class Button(Object):
     button = pygame.image
     oriSize = ()
     hoverSize = ()
+    mouse = MouseEffect()
 
-    def __init__(self, path, parent_surface: pygame.Surface, pos_x, pos_y):
-        super().__init__(path, parent_surface)
+    def add(self, path, parent_surface: pygame.Surface, pos_x, pos_y):
+        self.path = path
+        self.parent_surface = parent_surface
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.ori_pos_x = pos_x
@@ -29,11 +30,10 @@ class Button(Object):
 
     def checkMouse(self):
 
-        mouse = MouseEffect()
         x_len = self.oriSize[0]
         y_len = self.oriSize[1]
-        mos_x = mouse.getPosMouse()[0]
-        mos_y = mouse.getPosMouse()[1]
+        mos_x = self.mouse.getPosMouse()[0]
+        mos_y = self.mouse.getPosMouse()[1]
 
         self.button = pygame.image.load(self.path)
 
@@ -49,7 +49,7 @@ class Button(Object):
             self.button = pygame.transform.scale(self.button, self.hoverSize)
             self.pos_x = self.ori_pos_x - (self.button.get_width() - x_len) / 2
             self.pos_y = self.ori_pos_y - (self.button.get_height() - y_len) / 2
-            if mouse.getPressedMouse() != None:
+            if self.mouse.getPressedMouse() != None:
                 if self.path == Cfs.BUTTON[2]:
                     self.path = Cfs.BUTTON[3]
                     self.button = pygame.image.load(self.path)

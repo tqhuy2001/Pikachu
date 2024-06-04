@@ -6,7 +6,6 @@ class PieceMap:
 
     def declareMap(self):
         blank = []
-        d = 0
         for row in range(11):
             tmp1 = []
 

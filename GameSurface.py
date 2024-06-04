@@ -10,17 +10,55 @@ pygame.init()
 class GameSurface(pygame.Surface):
 
     piece_map = PieceMap()
-    btn_change = Button
-    btn_replay = Button
-    btn_sound = Button
+    btn_change = Button()
+    btn_replay = Button()
+    btn_sound = Button()
+    piece = [None]
+    pieceSelected = ()
 
     def __init__(self, width, height):
 
         pygame.Surface.__init__(self, size=(width, height))
-        self.btn_change = Button(Cfs.BUTTON[0], self, 40, 750)
-        self.btn_replay = Button(Cfs.BUTTON[1], self, 330, 750)
-        self.btn_sound = Button(Cfs.BUTTON[2], self, 620, 750)
+
+    def start(self):
+
+        self.btn_change.add(Cfs.BUTTON[0], self, 40, 750)
+        self.btn_replay.add(Cfs.BUTTON[1], self, 330, 750)
+        self.btn_sound.add(Cfs.BUTTON[2], self, 620, 750)
+
         self.piece_map.declareMap()
+
+        for row in range(1, 10):
+            tmp = [None]
+            for col in range(1, 17):
+                p = Piece()
+                p.add(Cfs.PIECES[self.piece_map.map[row][col]], self, row, col, self.piece_map)
+                tmp.append(p)
+            self.piece.append(tmp)
+
+    def checkIsConnected(self, piece1, piece2):
+        return False
+
+    def manageGame(self):
+
+        for row in range(1, 10):
+            for col in range(1, 17):
+                if self.piece[row][col].isSelected is True and self.piece_map.map[row][col] != 0:
+                    if self.pieceSelected == ():
+                        self.pieceSelected = (row, col)
+                        break
+        for row in range(1, 10):
+            for col in range(1, 17):
+                if self.piece[row][col].isSelected is True and self.piece_map.map[row][col] != 0 and (row != self.pieceSelected[0] or col != self.pieceSelected[1]):
+                    if self.checkIsConnected((self.pieceSelected), (row, col)):
+                        self.piece_map.map[row][col] = 0
+                        self.piece_map.map[self.pieceSelected[0]][self.pieceSelected[1]] = 0
+                    else:
+                        pass
+                    self.piece[self.pieceSelected[0]][self.pieceSelected[1]].isSelected = False
+                    self.piece[row][col].isSelected = False
+                    self.pieceSelected = ()
+
 
     def loadObjects(self):
         pass
@@ -29,8 +67,7 @@ class GameSurface(pygame.Surface):
         for row in range(1, 10):
             for col in range(1, 17):
                 if self.piece_map.map[row][col] != 0:
-                    piece = Piece(Cfs.PIECES[self.piece_map.map[row][col]], self, row, col)
-                    piece.draw()
+                    self.piece[row][col].draw()
 
     def drawGUI(self):
         self.btn_change.draw()

@@ -12,6 +12,7 @@ background = pygame.image.load("Assets\\background.png")
 background = pygame.transform.scale(background,(Cfs.WIDTH_SCREEN, Cfs.HEIGHT_SCREEN))
 
 game_surface = GameSurface(Cfs.WIDTH_SCREEN, Cfs.HEIGHT_SCREEN)
+game_surface.start()
 
 mouse = MouseEffect()
 
@@ -21,7 +22,7 @@ pygame.display.set_icon(logo)
 running = True
 
 def updateGame():
-    game_surface.loadObjects()
+    game_surface.manageGame()
     game_surface.drawMap()
     game_surface.drawGUI()
     screen.blit(game_surface, (0, 0))
