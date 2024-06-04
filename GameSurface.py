@@ -3,6 +3,7 @@ from Map.PieceMap import *
 import Configs as Cfs
 from Objects.Piece import *
 from Objects.Button import *
+from Objects.Line import *
 
 pygame.init()
 
@@ -15,6 +16,7 @@ class GameSurface(pygame.Surface):
     btn_sound = Button()
     piece = [None]
     pieceSelected = ()
+    line = Line()
 
     def __init__(self, width, height):
 
@@ -25,6 +27,7 @@ class GameSurface(pygame.Surface):
         self.btn_change.add(Cfs.BUTTON[0], self, 40, 750)
         self.btn_replay.add(Cfs.BUTTON[1], self, 330, 750)
         self.btn_sound.add(Cfs.BUTTON[2], self, 620, 750)
+        self.line.add(self, (1, 1), (1, 9))
 
         self.piece_map.declareMap()
 
@@ -37,7 +40,14 @@ class GameSurface(pygame.Surface):
             self.piece.append(tmp)
 
     def checkIsConnected(self, piece1, piece2):
-        return False
+        p1_row = piece1[0]
+        p1_col = piece1[1]
+        p2_row = piece2[0]
+        p2_col = piece2[1]
+        if self.piece_map.map[p1_row][p1_col] != self.piece_map.map[p2_row][p2_col]:
+            return False
+        else:
+            return True
 
     def manageGame(self):
 
@@ -73,6 +83,9 @@ class GameSurface(pygame.Surface):
         self.btn_change.draw()
         self.btn_replay.draw()
         self.btn_sound.draw()
+        self.line.draw()
+
+
 
 
 
