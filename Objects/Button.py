@@ -49,7 +49,7 @@ class Button():
             self.button = pygame.transform.scale(self.button, self.hoverSize)
             self.pos_x = self.ori_pos_x - (self.button.get_width() - x_len) / 2
             self.pos_y = self.ori_pos_y - (self.button.get_height() - y_len) / 2
-            if self.mouse.getPressedMouse() != None:
+            if self.mouse.getPressedMouse() is not None:
                 if self.path == Cfs.BUTTON[2]:
                     self.path = Cfs.BUTTON[3]
                     self.button = pygame.image.load(self.path)

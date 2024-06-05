@@ -25,6 +25,7 @@ def updateGame():
     game_surface.manageGame()
     game_surface.drawMap()
     game_surface.drawGUI()
+
     screen.blit(game_surface, (0, 0))
 
 while running:
