@@ -1,12 +1,12 @@
 import pygame
 from Map.PieceMap import *
+from Map.Levels import *
 import Configs as Cfs
 from Objects.Piece import *
 from Objects.Button import *
 from Objects.Line import *
 
 pygame.init()
-
 
 class GameSurface(pygame.Surface):
 
@@ -16,13 +16,19 @@ class GameSurface(pygame.Surface):
     btn_sound = Button()
     piece = [None]
     pieceSelected = ()
-    timeDelay = 0
+    is_winning = False
+    current_level = 1
+    level = Levels()
 
     def __init__(self, width, height):
 
         pygame.Surface.__init__(self, size=(width, height))
+        self.level.add(self.piece_map)
 
     def start(self):
+
+        self.is_winning = False
+        self.current_level = 1
 
         self.btn_change.add(Cfs.BUTTON[0], self, 40, 750)
         self.btn_replay.add(Cfs.BUTTON[1], self, 330, 750)
@@ -142,7 +148,31 @@ class GameSurface(pygame.Surface):
 
             return False
 
+    def checkWinning(self):
+        d = 0
+        for row in range(1, 10):
+            for col in range(1, 17):
+                if self.piece_map.map[row][col] == 0:
+                    d += 1
+        if d == 9 * 16:
+            self.is_winning = True
+
+    def nextLevel(self):
+        pass
+
     def manageGame(self):
+
+        if self.checkWinning():
+            self.nextLevel()
+        if self.btn_change.isPressed is True:
+            self.piece_map.shuffleMap()
+            for row in range(1, 10):
+                for col in range(1, 17):
+                    if self.piece_map.map[row][col] != 0:
+                        p = Piece()
+                        p.add(Cfs.PIECES[self.piece_map.map[row][col]], self, row, col, self.piece_map)
+                        self.piece[row][col] = p
+            self.btn_change.isPressed = False
 
         for row in range(1, 10):
             for col in range(1, 17):
@@ -155,7 +185,6 @@ class GameSurface(pygame.Surface):
                 if self.piece[row][col].isSelected is True and self.piece_map.map[row][col] != 0 and (row != self.pieceSelected[0] or col != self.pieceSelected[1]):
                     if self.checkIsConnected((self.pieceSelected), (row, col)):
                         self.piece_map.map[row][col] = self.piece_map.map[self.pieceSelected[0]][self.pieceSelected[1]] = 0
-                        self.timeDelay = 300
                     else:
                         pass
                     self.piece[self.pieceSelected[0]][self.pieceSelected[1]].isSelected = False
@@ -163,6 +192,7 @@ class GameSurface(pygame.Surface):
                     self.pieceSelected = ()
 
     def drawMap(self):
+
         for row in range(1, 10):
             for col in range(1, 17):
                 if self.piece_map.map[row][col] != 0:

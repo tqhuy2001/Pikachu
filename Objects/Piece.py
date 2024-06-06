@@ -6,7 +6,7 @@ import pygame
 
 pygame.init()
 
-class Piece():
+class Piece:
 
     tmp = pygame.Surface((40, 50))
     row = 0
@@ -16,9 +16,8 @@ class Piece():
     piece = pygame.image
     mouse = MouseEffect()
     isSelected = False
-    piece_map = PieceMap()
 
-    def add(self, path, parent_surface: pygame.Surface, row, col, piece_map):
+    def add(self, path, parent_surface: pygame.Surface, row, col, piece_map: PieceMap):
         self.path = path
         self.parent_surface = parent_surface
         self.row = row
@@ -55,7 +54,7 @@ class Piece():
         self.tmp.blit(self.piece, (0, 0))
         if self.isSelected is True:
             self.border_color = "blue"
-            pygame.draw.rect(self.tmp, self.border_color, self.border, 2)
+            pygame.draw.rect(self.tmp, self.border_color, self.border, 3)
         else:
             pygame.draw.rect(self.tmp, self.border_color, self.border , 1)
         self.parent_surface.blit(self.tmp, (self.col * 40 + Cfs.FIRST_PIECE_POS_X, self.row * 50 + Cfs.FIRST_PIECE_POS_Y))

@@ -5,7 +5,7 @@ import pygame
 
 pygame.init()
 
-class Button():
+class Button:
 
     ori_pos_x = 0
     ori_pos_y = 0
@@ -15,6 +15,7 @@ class Button():
     oriSize = ()
     hoverSize = ()
     mouse = MouseEffect()
+    isPressed = False
 
     def add(self, path, parent_surface: pygame.Surface, pos_x, pos_y):
         self.path = path
@@ -36,7 +37,6 @@ class Button():
         mos_y = self.mouse.getPosMouse()[1]
 
         self.button = pygame.image.load(self.path)
-
         if mos_x > self.pos_x and (mos_x < int(self.ori_pos_x + x_len)):
             x_inside = True
         else:
@@ -59,6 +59,7 @@ class Button():
                 self.button = pygame.transform.scale(self.button, self.oriSize)
                 self.pos_x = self.ori_pos_x
                 self.pos_y = self.ori_pos_y
+                self.isPressed = True
         else:
             self.button = pygame.transform.scale(self.button, self.oriSize)
             self.pos_x = self.ori_pos_x
