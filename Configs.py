@@ -1,9 +1,9 @@
 WIDTH_SCREEN = 1200
 HEIGHT_SCREEN = 850
-FPS = 144
+FPS = 120
 
 FIRST_PIECE_POS_X = 240
-FIRST_PIECE_POS_Y = 160
+FIRST_PIECE_POS_Y = 165
 
 PIECES = ["", "Assets\\pieces1.png",
 "Assets\\pieces2.png",

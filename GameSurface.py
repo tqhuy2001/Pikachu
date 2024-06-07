@@ -25,8 +25,9 @@ class GameSurface(pygame.Surface):
     is_winning = False
     current_level = 1
     level = Levels()
-    time_remaining = 300
-    temp_time = 300
+    time_level = 300
+    time_remaining = time_level
+    temp_time = time_level
     turnon_sound = True
 
     time_bar = TimeBar()
@@ -59,8 +60,8 @@ class GameSurface(pygame.Surface):
 
         self.is_winning = False
         self.current_level = 1
-        self.time_remaining = 300
-        self.temp_time = 300
+        self.time_remaining = self.time_level
+        self.temp_time = self.time_level
 
         self.piece_map.declareMap()
 
@@ -188,8 +189,8 @@ class GameSurface(pygame.Surface):
     def nextLevel(self):
         self.is_winning = False
         self.current_level += 1
-        self.time_remaining = 300
-        self.temp_time = 300
+        self.time_remaining = self.time_level
+        self.temp_time = self.time_level
 
         self.piece_map.declareMap()
 
@@ -282,7 +283,10 @@ class GameSurface(pygame.Surface):
     def drawGUI(self):
         title_game = pygame.image.load("Assets\\titlegame.png")
         title_game = pygame.transform.scale(title_game, (title_game.get_width() * 1 / 2, title_game.get_height() * 1 / 2))
-        self.blit(title_game, (400, 20))
+        pikachu = pygame.image.load("Assets\\pikachu.png")
+        pikachu = pygame.transform.scale(pikachu,(pikachu.get_width() * 1 / 5, pikachu.get_height() * 1 / 5))
+        self.blit(title_game, (400, 50))
+        self.blit(pikachu, (670, -1))
         self.btn_change.draw()
         self.btn_replay.draw()
         self.btn_sound.draw()
