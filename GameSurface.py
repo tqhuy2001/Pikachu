@@ -5,6 +5,7 @@ import Configs as Cfs
 from Objects.Piece import *
 from Objects.Button import *
 from Objects.Line import *
+from Objects.TimeBar import *
 
 pygame.init()
 
@@ -19,23 +20,26 @@ class GameSurface(pygame.Surface):
     is_winning = False
     current_level = 1
     level = Levels()
+    time_remaining = 300
+    time_bar = TimeBar()
 
     def __init__(self, width, height):
 
         pygame.Surface.__init__(self, size=(width, height))
         self.level.add(self.piece_map)
+        self.btn_change.add(Cfs.BUTTON[0], self, 60, 750)
+        self.btn_replay.add(Cfs.BUTTON[1], self, 380, 750)
+        self.btn_sound.add(Cfs.BUTTON[2], self, 700, 750)
+        self.time_bar.add("Assets\\timebar.png", self, 1120, 100)
 
-    def start(self):
+    def newGame(self):
 
         self.is_winning = False
         self.current_level = 1
 
-        self.btn_change.add(Cfs.BUTTON[0], self, 40, 750)
-        self.btn_replay.add(Cfs.BUTTON[1], self, 330, 750)
-        self.btn_sound.add(Cfs.BUTTON[2], self, 620, 750)
-
         self.piece_map.declareMap()
 
+        self.piece = [None]
         for row in range(1, 10):
             tmp = [None]
             for col in range(1, 17):
@@ -158,7 +162,19 @@ class GameSurface(pygame.Surface):
             self.is_winning = True
 
     def nextLevel(self):
-        pass
+        self.is_winning = False
+        self.current_level += 1
+
+        self.piece_map.declareMap()
+
+        self.piece = [None]
+        for row in range(1, 10):
+            tmp = [None]
+            for col in range(1, 17):
+                p = Piece()
+                p.add(Cfs.PIECES[self.piece_map.map[row][col]], self, row, col, self.piece_map)
+                tmp.append(p)
+            self.piece.append(tmp)
 
     def manageGame(self):
 
@@ -169,10 +185,12 @@ class GameSurface(pygame.Surface):
             for row in range(1, 10):
                 for col in range(1, 17):
                     if self.piece_map.map[row][col] != 0:
-                        p = Piece()
-                        p.add(Cfs.PIECES[self.piece_map.map[row][col]], self, row, col, self.piece_map)
-                        self.piece[row][col] = p
+                        self.piece[row][col].path = Cfs.PIECES[self.piece_map.map[row][col]]
+                        self.piece[row][col].piece = pygame.image.load(self.piece[row][col].path)
             self.btn_change.isPressed = False
+        if self.btn_replay.isPressed is True:
+            self.newGame()
+            self.btn_replay.isPressed = False
 
         for row in range(1, 10):
             for col in range(1, 17):
@@ -183,8 +201,9 @@ class GameSurface(pygame.Surface):
         for row in range(1, 10):
             for col in range(1, 17):
                 if self.piece[row][col].isSelected is True and self.piece_map.map[row][col] != 0 and (row != self.pieceSelected[0] or col != self.pieceSelected[1]):
-                    if self.checkIsConnected((self.pieceSelected), (row, col)):
+                    if self.checkIsConnected(self.pieceSelected, (row, col)):
                         self.piece_map.map[row][col] = self.piece_map.map[self.pieceSelected[0]][self.pieceSelected[1]] = 0
+                        self.level.handleLevel(self.current_level % 9, self.pieceSelected, (row, col))
                     else:
                         pass
                     self.piece[self.pieceSelected[0]][self.pieceSelected[1]].isSelected = False
@@ -192,16 +211,18 @@ class GameSurface(pygame.Surface):
                     self.pieceSelected = ()
 
     def drawMap(self):
-
         for row in range(1, 10):
             for col in range(1, 17):
                 if self.piece_map.map[row][col] != 0:
+                    self.piece[row][col].path = Cfs.PIECES[self.piece_map.map[row][col]]
+                    self.piece[row][col].piece = pygame.image.load(self.piece[row][col].path)
                     self.piece[row][col].draw()
 
     def drawGUI(self):
         self.btn_change.draw()
         self.btn_replay.draw()
         self.btn_sound.draw()
+        self.time_bar.draw()
 
 
 

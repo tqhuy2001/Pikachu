@@ -12,7 +12,7 @@ background = pygame.image.load("Assets\\background.png")
 background = pygame.transform.scale(background,(Cfs.WIDTH_SCREEN, Cfs.HEIGHT_SCREEN))
 
 game_surface = GameSurface(Cfs.WIDTH_SCREEN, Cfs.HEIGHT_SCREEN)
-game_surface.start()
+game_surface.newGame()
 
 mouse = MouseEffect()
 
