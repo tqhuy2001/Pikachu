@@ -16,13 +16,13 @@ game_surface.newGame()
 
 mouse = MouseEffect()
 
-pygame.display.set_caption("PIKACHU")
+pygame.display.set_caption("Pikachu")
 pygame.display.set_icon(logo)
 
 running = True
 
 def updateGame():
-    game_surface.manageGame()
+    game_surface.manageGame(clock.get_time())
     game_surface.drawMap()
     game_surface.drawGUI()
 

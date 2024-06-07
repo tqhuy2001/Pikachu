@@ -1,3 +1,5 @@
+import math
+
 import pygame
 from Map.PieceMap import *
 from Map.Levels import *
@@ -6,36 +8,59 @@ from Objects.Piece import *
 from Objects.Button import *
 from Objects.Line import *
 from Objects.TimeBar import *
+from Effects.Sound import *
 
 pygame.init()
 
 class GameSurface(pygame.Surface):
 
     piece_map = PieceMap()
+
     btn_change = Button()
     btn_replay = Button()
     btn_sound = Button()
+
     piece = [None]
     pieceSelected = ()
     is_winning = False
     current_level = 1
     level = Levels()
     time_remaining = 300
+    temp_time = 300
+    turnon_sound = True
+
     time_bar = TimeBar()
+
+    change_map_sound = Sound()
+    connected_pieces_sound = Sound()
+    game_over_sound = Sound()
+    next_lvl_sound = Sound()
+    selected_piece_sound = Sound()
 
     def __init__(self, width, height):
 
         pygame.Surface.__init__(self, size=(width, height))
+
         self.level.add(self.piece_map)
-        self.btn_change.add(Cfs.BUTTON[0], self, 60, 750)
-        self.btn_replay.add(Cfs.BUTTON[1], self, 380, 750)
-        self.btn_sound.add(Cfs.BUTTON[2], self, 700, 750)
-        self.time_bar.add("Assets\\timebar.png", self, 1120, 100)
+
+        self.btn_change.add(Cfs.BUTTON[0], self, 80, 750)
+        self.btn_replay.add(Cfs.BUTTON[1], self, 440, 750)
+        self.btn_sound.add(Cfs.BUTTON[2], self, 800, 750)
+
+        self.time_bar.add("Assets\\timebar.png", self, 1120, 90)
+
+        self.change_map_sound.add("Assets\\changemapsound.wav", 0.33)
+        self.connected_pieces_sound.add("Assets\\connectedpiecessound.wav", 0.35)
+        self.game_over_sound.add("Assets\\gameoversound.wav", 1)
+        self.next_lvl_sound.add("Assets\\nextlvlsound.wav", 0.6)
+        self.selected_piece_sound.add("Assets\\selectedpiecesound.wav", 0.8)
 
     def newGame(self):
 
         self.is_winning = False
         self.current_level = 1
+        self.time_remaining = 300
+        self.temp_time = 300
 
         self.piece_map.declareMap()
 
@@ -153,17 +178,18 @@ class GameSurface(pygame.Surface):
             return False
 
     def checkWinning(self):
-        d = 0
+
         for row in range(1, 10):
             for col in range(1, 17):
-                if self.piece_map.map[row][col] == 0:
-                    d += 1
-        if d == 9 * 16:
-            self.is_winning = True
+                if self.piece_map.map[row][col] != 0:
+                    return False
+        return True
 
     def nextLevel(self):
         self.is_winning = False
         self.current_level += 1
+        self.time_remaining = 300
+        self.temp_time = 300
 
         self.piece_map.declareMap()
 
@@ -176,11 +202,24 @@ class GameSurface(pygame.Surface):
                 tmp.append(p)
             self.piece.append(tmp)
 
-    def manageGame(self):
+    def gameOver(self):
+        pass
+
+    def manageGame(self, time):
 
         if self.checkWinning():
+            self.next_lvl_sound.play()
             self.nextLevel()
+
+        if self.time_remaining >= 0:
+            self.time_remaining -= time / 1000
+        else:
+            self.gameOver()
+        if self.temp_time - self.time_remaining >= 3:
+            self.temp_time = self.time_remaining
+
         if self.btn_change.isPressed is True:
+            self.change_map_sound.play()
             self.piece_map.shuffleMap()
             for row in range(1, 10):
                 for col in range(1, 17):
@@ -188,20 +227,42 @@ class GameSurface(pygame.Surface):
                         self.piece[row][col].path = Cfs.PIECES[self.piece_map.map[row][col]]
                         self.piece[row][col].piece = pygame.image.load(self.piece[row][col].path)
             self.btn_change.isPressed = False
+
         if self.btn_replay.isPressed is True:
+            self.next_lvl_sound.play()
             self.newGame()
             self.btn_replay.isPressed = False
+
+        if self.btn_sound.isPressed is True:
+            if self.turnon_sound is True:
+                self.change_map_sound.setVol(0)
+                self.connected_pieces_sound.setVol(0)
+                self.game_over_sound.setVol(0)
+                self.next_lvl_sound.setVol(0)
+                self.selected_piece_sound.setVol(0)
+                self.turnon_sound = False
+            else:
+                self.turnon_sound = True
+                self.change_map_sound.setVol(self.change_map_sound.vol)
+                self.connected_pieces_sound.setVol(self.connected_pieces_sound.vol)
+                self.game_over_sound.setVol(self.game_over_sound.vol)
+                self.next_lvl_sound.setVol(self.next_lvl_sound.vol)
+                self.selected_piece_sound.setVol(self.selected_piece_sound.vol)
+                self.selected_piece_sound.play()
+            self.btn_sound.isPressed = False
 
         for row in range(1, 10):
             for col in range(1, 17):
                 if self.piece[row][col].isSelected is True and self.piece_map.map[row][col] != 0:
                     if self.pieceSelected == ():
+                        self.selected_piece_sound.play()
                         self.pieceSelected = (row, col)
                         break
         for row in range(1, 10):
             for col in range(1, 17):
                 if self.piece[row][col].isSelected is True and self.piece_map.map[row][col] != 0 and (row != self.pieceSelected[0] or col != self.pieceSelected[1]):
                     if self.checkIsConnected(self.pieceSelected, (row, col)):
+                        self.connected_pieces_sound.play()
                         self.piece_map.map[row][col] = self.piece_map.map[self.pieceSelected[0]][self.pieceSelected[1]] = 0
                         self.level.handleLevel(self.current_level % 9, self.pieceSelected, (row, col))
                     else:
@@ -219,12 +280,14 @@ class GameSurface(pygame.Surface):
                     self.piece[row][col].draw()
 
     def drawGUI(self):
+        title_game = pygame.image.load("Assets\\titlegame.png")
+        title_game = pygame.transform.scale(title_game, (title_game.get_width() * 1 / 2, title_game.get_height() * 1 / 2))
+        self.blit(title_game, (400, 20))
         self.btn_change.draw()
         self.btn_replay.draw()
         self.btn_sound.draw()
-        self.time_bar.draw()
 
 
-
+        self.time_bar.draw(round(300 - self.temp_time) * 100 / 300)
 
 

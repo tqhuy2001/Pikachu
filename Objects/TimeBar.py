@@ -14,5 +14,6 @@ class TimeBar:
         self.pos_y = pos_y
         self.time_bar = pygame.image.load(self.path)
 
-    def draw(self):
-        self.parent_surface.blit(self.time_bar, (self.pos_x, self.pos_y))
+    def draw(self, percent):
+        self.parent_surface.blit(self.time_bar, (self.pos_x, self.pos_y + self.time_bar.get_height() * percent / 100),
+                                 (0, self.time_bar.get_height() * percent / 100, self.time_bar.get_width(), self.time_bar.get_height()))
