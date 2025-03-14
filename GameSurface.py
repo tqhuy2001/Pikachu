@@ -1,14 +1,14 @@
 import math
 
 import pygame
-from Map.PieceMap import *
-from Map.Levels import *
+from map.PieceMap import *
+from map.Levels import *
 import Configs as Cfs
-from Objects.Piece import *
-from Objects.Button import *
-from Objects.Line import *
-from Objects.TimeBar import *
-from Effects.Sound import *
+from objects.Piece import *
+from objects.Button import *
+from objects.Line import *
+from objects.TimeBar import *
+from effects.Sound import *
 
 pygame.init()
 

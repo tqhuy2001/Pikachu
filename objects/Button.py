@@ -1,4 +1,4 @@
-from Effects.MouseEffect import *
+from effects.MouseEffect import *
 import Configs as Cfs
 
 import pygame

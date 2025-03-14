@@ -1,6 +1,6 @@
-from Effects.MouseEffect import *
+from effects.MouseEffect import *
 import Configs as Cfs
-from Map.PieceMap import *
+from map.PieceMap import *
 
 import pygame
 

@@ -1,4 +1,4 @@
-from Map.PieceMap import *
+from map.PieceMap import *
 
 class Levels:
 

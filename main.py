@@ -1,6 +1,6 @@
 import pygame
 from GameSurface import *
-from Objects.Piece import *
+from objects.Piece import *
 
 pygame.init()
 

@@ -1,6 +1,6 @@
 import pygame
 import Configs as Cfs
-from Map.PieceMap import *
+from map.PieceMap import *
 
 pygame.init()
 
