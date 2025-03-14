@@ -13,12 +13,15 @@ Players must connect matching Pokémon tiles with up to **three straight lines**
 - 🔄 **Changing Pieces & Play Again Feature**  
 - 🎮 **Keyboard & Mouse Support** 
 
+### 🎬 Gameplay Preview  
+![Pikachu Game Preview](Assets/python_pljahqvRky.gif)
+
 ---
 
 ## 2. Prerequisites
 
-- **Python** (>= 3.12.3)  
-- **Pygame** (>= 2.6.1)  
+- **Python** (3.12.3)  
+- **Pygame** (2.6.1)  
 
 ---
 
@@ -26,5 +29,12 @@ Players must connect matching Pokémon tiles with up to **three straight lines**
 
 ### **Clone the Repository**
 ```sh
-$ git clone https://github.com/tqhuy2001/Pikachu.git
-$ cd Pikachu
+git clone https://github.com/tqhuy2001/Pikachu.git
+```
+
+### **Install, run and enjoy the game**
+```sh
+cd Pikachu
+pip install -r requirements.txt # Make sure Python is installed
+python main.py
+```
